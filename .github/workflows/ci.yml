@@ -20,6 +20,9 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      - name: Gradle wrapper-a icazə ver
+        run: chmod +x ./gradlew
+
       - name: Gradle cache istifadə et
         uses: actions/cache@v3
         with:
