@@ -1,4 +1,4 @@
-name: Build, Test, and Deploy (Gradle)
+name: Build and Test (Gradle)
 
 on:
   push:
@@ -35,40 +35,3 @@ jobs:
 
       - name: Build et və testləri işə sal
         run: ./gradlew build
-
-      # Test Coverage reportu əlavə edirik
-      - name: Test Coverage
-        run: ./gradlew jacocoTestReport
-        continue-on-error: true
-
-      # Testləri GitHub Actions-a əlavə edirik (JUnit XML)
-      - name: Upload Test Results
-        uses: actions/upload-artifact@v3
-        with:
-          name: test-results
-          path: build/test-logs/
-
-      # Sonra Docker image yaratmaq (Əgər Docker ilə deploy edirsənsə)
-      - name: Docker Build
-        run: docker build -t my-app .
-
-      # GitHub Pages (məqsədli deploy)
-      - name: Deploy to Render or Heroku
-        run: |
-          echo "Deploying to Heroku..."
-          # buraya Heroku/Render deploy əmrini yaz
-
-  notify:
-    needs: build
-    runs-on: ubuntu-latest
-    if: ${{ always() }}
-    steps:
-      - name: Notify Slack (success/fail)
-        if: ${{ failure() }}
-        run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"Build failed! Please check!"}' ${{ secrets.SLACK_WEBHOOK_URL }}
-
-      - name: Notify Slack (success/fail)
-        if: ${{ success() }}
-        run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"Build successful!"}' ${{ secrets.SLACK_WEBHOOK_URL }}
